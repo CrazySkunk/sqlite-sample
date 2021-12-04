@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">M-Expenses</string>
+    <string name="time_of_expense">Time of expense</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="type_of_expense">Type of expense</string>
+    <string name="amount_of_expense">Amount of expense</string>
+    <string name="destination_conference_hall">Destination: Conference hall</string>
+    <string name="date">22/12/2021</string>
+    <string name="destination">Destination</string>
+    <string name="name_of_trip">Name of trip</string>
+    <string name="date_of_trip">Date of trip</string>
+    <string name="description">Description</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
+    <string name="require_risk_assessment">Require risk assessment?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="save">save</string>
+    <string name="name_ndestination_ndate">Name: \nDestination: \nDate:</string>
+    <string name="update">Update</string>
 </resources>

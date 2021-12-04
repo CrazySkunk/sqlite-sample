@@ -10,9 +10,8 @@ public class Trip implements Parcelable {
     private String nameOfPlace,destination,dateOfTrip,description;
     private boolean riskAssessment;
     private double latitude,longitude;
-    private List<Expense> expens;
 
-    public Trip(int id, String nameOfPlace, String destination, String dateOfTrip, String description, boolean riskAssessment, double latitude, double longitude,List<Expense> expens) {
+    public Trip(int id, String nameOfPlace, String destination, String dateOfTrip, String description, boolean riskAssessment, double latitude, double longitude) {
         this.id = id;
         this.nameOfPlace = nameOfPlace;
         this.destination = destination;
@@ -21,7 +20,6 @@ public class Trip implements Parcelable {
         this.riskAssessment = riskAssessment;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.expens = expens;
     }
 
     protected Trip(Parcel in) {
@@ -109,14 +107,6 @@ public class Trip implements Parcelable {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
-    }
-
-    public List<Expense> getExpenses() {
-        return expens;
-    }
-
-    public void setExpenses(List<Expense> expens) {
-        this.expens = expens;
     }
 
     @Override

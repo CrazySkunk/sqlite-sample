@@ -8,13 +8,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHelper {
-    private final Retrofit retrofit = null;
+    private Retrofit retrofit = null;
     public Retrofit getRetrofit(String baseUrl){
-        return new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(getClient())
-                .build();
+        if (retrofit==null){
+            retrofit=new Retrofit.Builder()
+                    .baseUrl(baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(getClient())
+                    .build();
+            return retrofit;
+        }
+        return retrofit;
     }
     private OkHttpClient getClient(){
         return new OkHttpClient.Builder()

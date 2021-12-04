@@ -31,7 +31,6 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -121,10 +120,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 binding.no.setSelected(true);
             }
-            binding.saveDetailsBtn.setText("Update");
-            binding.saveDetailsBtn.setOnClickListener(v -> {
-                updateDetails(trip);
-            });
+            binding.saveDetailsBtn.setText(R.string.update);
+            binding.saveDetailsBtn.setOnClickListener(v -> updateDetails(trip));
         }
 
     }
@@ -144,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     binding.dateEtLayout.setError("Cannot be empty");
                 } else {
                     binding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> riskAssessment = checkedId == binding.yes.getId());
-                    Trip trip = new Trip(tr.getId(), nameOfPlace, destination, dateOfTrip, description, riskAssessment, latitude, longitude, tr.getExpenses());
+                    Trip trip = new Trip(tr.getId(), nameOfPlace, destination, dateOfTrip, description, riskAssessment, latitude, longitude);
                     boolean status = dbHelper.updateTrip(trip);
                     if (status)
                         Snackbar.make(binding.getRoot(), "Record updated successfully", Snackbar.LENGTH_LONG).setAnimationMode(Snackbar.ANIMATION_MODE_FADE).show();
@@ -168,11 +165,11 @@ public class MainActivity extends AppCompatActivity {
                     binding.dateEtLayout.setError("Cannot be empty");
                 } else {
                     binding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> riskAssessment = checkedId == binding.yes.getId());
-                    Trip trip = new Trip(0, nameOfPlace, destination, dateOfTrip, description, riskAssessment, latitude, longitude, new ArrayList<>());
+                    Trip trip = new Trip(0, nameOfPlace, destination, dateOfTrip, description, riskAssessment, latitude, longitude);
                     boolean status = dbHelper.insertTrip(trip);
                     if (status)
                         Snackbar.make(binding.getRoot(), "Record inserted successfully", Snackbar.LENGTH_LONG).setAnimationMode(Snackbar.ANIMATION_MODE_FADE).show();
-                    Retrofit helper = new RetrofitHelper().getRetrofit("https://stuiis.cms.gre.ac.uk/COMP1424CoreWS/comp1424cw");
+                    Retrofit helper = new RetrofitHelper().getRetrofit("https://stuiis.cms.gre.ac.uk/COMP1424CoreWS/");
                     IPostTrip service = helper.create(IPostTrip.class);
                     service.postTrip(trip).enqueue(new Callback<Trip>() {
                         @Override
@@ -204,9 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
                         .setTitle("M-Expenses")
                         .setMessage("This permission is necessary")
-                        .setPositiveButton("OK", (dialog, which) -> {
-                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-                        });
+                        .setPositiveButton("OK", (dialog, which) -> ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200));
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             } else {
@@ -245,10 +240,9 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isGPSEnabled() {
         LocationManager locationManager = null;
-        boolean isEnabled = false;
-        if (locationManager == null) {
+        boolean isEnabled;
+        if (locationManager == null)
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        }
         isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return isEnabled;
     }

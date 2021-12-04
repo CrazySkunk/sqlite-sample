@@ -14,7 +14,7 @@ import uk.ac.gre.mf9669w.m_expense.databinding.TripItemBinding;
 import uk.ac.gre.mf9669w.m_expense.models.Trip;
 
 public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripsViewHolder> {
-    private final List<Trip> trips;
+    private List<Trip> trips;
     private OnItemLongClick listener;
     private OnItemClick click;
 
@@ -24,6 +24,9 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripsViewHol
 
     public interface OnItemClick{
         void onItemClick(int position);
+    }
+    public void setList(List<Trip>trips){
+        this.trips=trips;
     }
 
     public void setOnItemLongClickListener(OnItemLongClick listener) {
@@ -67,7 +70,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripsViewHol
                 if (position != RecyclerView.NO_POSITION) {
                     listener.onItemLongClick(position);
                 }
-                return false;
+                return true;
             });
             binding.getRoot().setOnClickListener(v -> {
                 int position = getAdapterPosition();

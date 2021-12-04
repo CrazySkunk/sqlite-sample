@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:theme="@style/Material_Theme"
+    android:layout_height="wrap_content">
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/type_of_expense_et_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -12,7 +13,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="40dp"
-        android:hint="Type of expense"
+        android:hint="@string/type_of_expense"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,7 +21,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/type_of_expense_et"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:drawableEnd="@drawable/name" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -32,7 +33,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:hint="Amount of expense"
+        android:hint="@string/amount_of_expense"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/type_of_expense_et_layout">
@@ -40,7 +41,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/amount_of_expense_et"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:drawableEnd="@drawable/money" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,7 +53,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:hint="Time of expense"
+        android:hint="@string/time_of_expense"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/amount_of_expense_et_layout">
@@ -60,7 +61,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/time_of_expense_et"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:drawableEnd="@drawable/date" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,9 +69,9 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Expense"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
+        android:text="@string/add_expense"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/time_of_expense_et_layout"
         app:layout_constraintHorizontal_bias="0.497"

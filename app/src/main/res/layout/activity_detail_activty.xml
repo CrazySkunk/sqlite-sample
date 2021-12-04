@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:text="Name: \nDestination: \nDate: "
+        android:text="@string/name_ndestination_ndate"
         android:textSize="16sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
