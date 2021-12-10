@@ -25,20 +25,21 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("" +
                 "create table trips(" +
-                "id integer primary key," +
+                "id integer primary key autoincrement," +
                 "name_of_place text," +
                 "destination text," +
                 "date_of_trip text," +
                 "risk_assessment boolean," +
                 "description text," +
-                "latitude text," +
-                "longitude text);");
+                "start_time text," +
+                "end_time text);");
         db.execSQL("" +
                 "create table expenses(" +
-                "id integer primary key," +
-                "expenses_name text," +
-                "expenses_price text," +
-                "expenses_date text" +
+                "id integer primary key autoincrement," +
+                "trip_id integer not null," +
+                "expense_name text," +
+                "expense_price text," +
+                "expense_date text" +
                 ");");
     }
 
@@ -56,8 +57,8 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("date_of_trip", trip.getDateOfTrip());
         values.put("risk_assessment", trip.isRiskAssessment());
         values.put("description", trip.getDescription());
-        values.put("latitude", trip.getLatitude());
-        values.put("longitude", trip.getLongitude());
+        values.put("start_time", trip.getStartTime());
+        values.put("end_time", trip.getEndTime());
         db.insert("trips", null, values);
         db.close();
         return true;
@@ -82,8 +83,8 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("date_of_trip", trip.getDateOfTrip());
         values.put("risk_assessment", trip.isRiskAssessment());
         values.put("description", trip.getDescription());
-        values.put("latitude", trip.getLatitude());
-        values.put("longitude", trip.getLongitude());
+        values.put("start_time", trip.getStartTime());
+        values.put("end_time", trip.getEndTime());
         database.update("trips", values, "id=?", new String[]{Integer.toString(trip.getId())});
         database.close();
         return true;
@@ -92,10 +93,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean addExpense(Expense expense) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("id", expense.getId());
-        values.put("expenses_name", expense.getTypeOfExpense());
-        values.put("expenses_price", expense.getAmountOfExpense());
-        values.put("expenses_date", expense.getTimeOfExpense());
+        values.put("trip_id", expense.getId());
+        values.put("expense_name", expense.getTypeOfExpense());
+        values.put("expense_price", expense.getAmountOfExpense());
+        values.put("expense_date", expense.getTimeOfExpense());
         database.insert("expenses", null, values);
         database.close();
         return true;
@@ -105,18 +106,22 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Expense> getTripExpenses(int id) {
         List<Expense> expenses = new ArrayList<>();
         SQLiteDatabase database = getReadableDatabase();
-        try (Cursor cursor = database.rawQuery("select * from expenses where id=" + id, null)) {
+        try (Cursor cursor = database.rawQuery("select * from expenses where id="+id+";", null)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                expenses.add(new Expense(
-                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))),
-                        cursor.getString(cursor.getColumnIndex("expenses_name")),
-                        cursor.getString(cursor.getColumnIndex("expenses_price")),
-                        cursor.getString(cursor.getColumnIndex("expenses_date"))));
-
-                cursor.moveToNext();
+//                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex("trip_id"))) == id) {
+                    expenses.add(new Expense(
+                            Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))),
+                            cursor.getString(cursor.getColumnIndex("trip_id")),
+                            cursor.getString(cursor.getColumnIndex("expense_name")),
+                            cursor.getString(cursor.getColumnIndex("expense_price")),
+                            cursor.getString(cursor.getColumnIndex("expense_date")))
+                    );
+                    cursor.moveToNext();
+//                }
             }
         }
+        database.close();
         return expenses;
     }
 
@@ -137,11 +142,10 @@ public class DBHelper extends SQLiteOpenHelper {
                         response.getString(response.getColumnIndex("name_of_place")),
                         response.getString(response.getColumnIndex("destination")),
                         response.getString(response.getColumnIndex("date_of_trip")),
-                        response.getString(response.getColumnIndex("risk_assessment")),
-                        Boolean.parseBoolean(response.getString(response.getColumnIndex("description"))),
-                        Double.parseDouble(response.getString(response.getColumnIndex("latitude"))),
-                        Double.parseDouble(response.getString(response.getColumnIndex("longitude")))));
-
+                        response.getString(response.getColumnIndex("description")),
+                        Boolean.parseBoolean(response.getString(response.getColumnIndex("risk_assessment"))),
+                        response.getString(response.getColumnIndex("start_time")),
+                        response.getString(response.getColumnIndex("end_time"))));
                 response.moveToNext();
             }
         }
@@ -152,6 +156,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean deleteAllData() {
         SQLiteDatabase database = this.getWritableDatabase();
         database.execSQL("delete from trips");
+        database.close();
+        return true;
+    }
+
+    public boolean deleteAllExpense() {
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.execSQL("delete from expenses;");
+        database.close();
         database.close();
         return true;
     }

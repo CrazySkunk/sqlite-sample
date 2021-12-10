@@ -18,4 +18,10 @@
     <string name="save">save</string>
     <string name="name_ndestination_ndate">Name: \nDestination: \nDate:</string>
     <string name="update">Update</string>
+    <string name="start_time">Start time</string>
+    <array name="expense_type">
+        <item>Travel</item>
+        <item>Food</item>
+        <item>Other</item>
+    </array>
 </resources>

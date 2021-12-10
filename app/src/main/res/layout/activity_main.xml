@@ -61,6 +61,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/date_et"
+            android:editable="false"
+            android:inputType="date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/date" />
@@ -88,35 +90,33 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/longitude_et_layout"
+        android:id="@+id/end_time_et_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:hint="@string/longitude"
+        android:hint="End time"
         app:layout_constraintEnd_toEndOf="@id/description_et_layout"
         app:layout_constraintTop_toBottomOf="@id/description_et_layout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/longitude_et"
-            android:editable="false"
+            android:id="@+id/end_time_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/latitude_et_layout"
+        android:id="@+id/start_at_et_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:hint="@string/latitude"
+        android:hint="@string/start_time"
         app:layout_constraintStart_toStartOf="@id/description_et_layout"
         app:layout_constraintTop_toBottomOf="@id/description_et_layout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/latitude_et"
-            android:editable="false"
+            android:id="@+id/start_at_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -129,7 +129,7 @@
         android:text="@string/require_risk_assessment"
         app:layout_constraintEnd_toEndOf="@+id/date_et_layout"
         app:layout_constraintStart_toStartOf="@+id/date_et_layout"
-        app:layout_constraintTop_toBottomOf="@+id/latitude_et_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/start_at_et_layout" />
 
     <RadioGroup
         android:id="@+id/radio_group"

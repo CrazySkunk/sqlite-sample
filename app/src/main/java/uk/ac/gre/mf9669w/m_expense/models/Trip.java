@@ -7,19 +7,18 @@ import java.util.List;
 
 public class Trip implements Parcelable {
     private int id;
-    private String nameOfPlace,destination,dateOfTrip,description;
+    private String nameOfPlace,destination,dateOfTrip,description,startTime,endTime;
     private boolean riskAssessment;
-    private double latitude,longitude;
 
-    public Trip(int id, String nameOfPlace, String destination, String dateOfTrip, String description, boolean riskAssessment, double latitude, double longitude) {
+    public Trip(int id, String nameOfPlace, String destination, String dateOfTrip, String description, boolean riskAssessment, String startTime, String endTime) {
         this.id = id;
         this.nameOfPlace = nameOfPlace;
         this.destination = destination;
         this.dateOfTrip = dateOfTrip;
         this.description = description;
         this.riskAssessment = riskAssessment;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     protected Trip(Parcel in) {
@@ -28,9 +27,9 @@ public class Trip implements Parcelable {
         destination = in.readString();
         dateOfTrip = in.readString();
         description = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
         riskAssessment = in.readByte() != 0;
-        latitude = in.readDouble();
-        longitude = in.readDouble();
     }
 
     public static final Creator<Trip> CREATOR = new Creator<Trip>() {
@@ -85,28 +84,28 @@ public class Trip implements Parcelable {
         this.description = description;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     public boolean isRiskAssessment() {
         return riskAssessment;
     }
 
     public void setRiskAssessment(boolean riskAssessment) {
         this.riskAssessment = riskAssessment;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 
     @Override
@@ -121,8 +120,8 @@ public class Trip implements Parcelable {
         dest.writeString(destination);
         dest.writeString(dateOfTrip);
         dest.writeString(description);
+        dest.writeString(startTime);
+        dest.writeString(endTime);
         dest.writeByte((byte) (riskAssessment ? 1 : 0));
-        dest.writeDouble(latitude);
-        dest.writeDouble(longitude);
     }
 }
