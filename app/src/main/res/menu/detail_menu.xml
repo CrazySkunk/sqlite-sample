@@ -2,11 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/add_trip"
-        android:title="Add trip"
+        android:id="@+id/delete_all_expense"
+        android:title="Delete all expense"
         app:showAsAction="never" />
     <item
-        android:id="@+id/delete_all_trips"
-        android:title="Delete all trips"
+        android:id="@+id/add_expense"
+        android:title="Add expense"
         app:showAsAction="never" />
+
 </menu>

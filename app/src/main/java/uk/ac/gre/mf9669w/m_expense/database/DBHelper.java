@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import uk.ac.gre.mf9669w.m_expense.models.Expense;
 import uk.ac.gre.mf9669w.m_expense.models.Trip;
 
 public class DBHelper extends SQLiteOpenHelper {
+    private static final String TAG = "DBHelper";
     public static final String DATABASE_NAME = "M-Expenses.db";
 
     public DBHelper(Context context) {
@@ -39,7 +41,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "trip_id integer not null," +
                 "expense_name text," +
                 "expense_price text," +
-                "expense_date text" +
+                "expense_date text," +
+                "foreign key(trip_id) references trips(id)" +
                 ");");
     }
 
@@ -90,10 +93,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateExpense(Expense expense) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("trip_id", expense.getExpenseOwner());
+        values.put("expense_name", expense.getTypeOfExpense());
+        values.put("expense_price", expense.getAmountOfExpense());
+        values.put("expense_date", expense.getTimeOfExpense());
+        database.update("expenses", values, "id=?", new String[]{Integer.toString(expense.getId())});
+        return true;
+    }
+
     public boolean addExpense(Expense expense) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("trip_id", expense.getId());
+        values.put("trip_id", expense.getExpenseOwner());
         values.put("expense_name", expense.getTypeOfExpense());
         values.put("expense_price", expense.getAmountOfExpense());
         values.put("expense_date", expense.getTimeOfExpense());
@@ -106,19 +120,18 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Expense> getTripExpenses(int id) {
         List<Expense> expenses = new ArrayList<>();
         SQLiteDatabase database = getReadableDatabase();
-        try (Cursor cursor = database.rawQuery("select * from expenses where id="+id+";", null)) {
+        try (Cursor cursor = database.rawQuery("select * from expenses where trip_id=" + id + ";", null)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-//                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex("trip_id"))) == id) {
-                    expenses.add(new Expense(
-                            Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))),
-                            cursor.getString(cursor.getColumnIndex("trip_id")),
-                            cursor.getString(cursor.getColumnIndex("expense_name")),
-                            cursor.getString(cursor.getColumnIndex("expense_price")),
-                            cursor.getString(cursor.getColumnIndex("expense_date")))
-                    );
-                    cursor.moveToNext();
-//                }
+                expenses.add(new Expense(
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("trip_id"))),
+                        cursor.getString(cursor.getColumnIndex("expense_name")),
+                        cursor.getString(cursor.getColumnIndex("expense_price")),
+                        cursor.getString(cursor.getColumnIndex("expense_date")))
+                );
+                Log.i(TAG, "getTripExpenses: trip id ->" + cursor.getString(cursor.getColumnIndex("trip_id")));
+                cursor.moveToNext();
             }
         }
         database.close();
@@ -127,7 +140,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Integer deleteUser(Integer id) {
         SQLiteDatabase database = this.getWritableDatabase();
-        return database.delete("users", "id=?", new String[]{Integer.toString(id)});
+        return database.delete("trips", "id=?", new String[]{Integer.toString(id)});
+    }
+
+    public Integer deleteExpense(Integer id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete("expenses", "id=?", new String[]{Integer.toString(id)});
     }
 
     @SuppressLint("Range")
@@ -137,13 +155,19 @@ public class DBHelper extends SQLiteOpenHelper {
         try (Cursor response = database.rawQuery("select * from trips;", null)) {
             response.moveToFirst();
             while (!response.isAfterLast()) {
+                boolean risk;
+                if (response.getString(response.getColumnIndex("risk_assessment")).equals("1")){
+                    risk=true;
+                }else {
+                    risk=false;
+                }
                 users.add(new Trip(
                         Integer.parseInt(response.getString(response.getColumnIndex("id"))),
                         response.getString(response.getColumnIndex("name_of_place")),
                         response.getString(response.getColumnIndex("destination")),
                         response.getString(response.getColumnIndex("date_of_trip")),
                         response.getString(response.getColumnIndex("description")),
-                        Boolean.parseBoolean(response.getString(response.getColumnIndex("risk_assessment"))),
+                        risk,
                         response.getString(response.getColumnIndex("start_time")),
                         response.getString(response.getColumnIndex("end_time"))));
                 response.moveToNext();
@@ -167,5 +191,7 @@ public class DBHelper extends SQLiteOpenHelper {
         database.close();
         return true;
     }
+
+
 }
 

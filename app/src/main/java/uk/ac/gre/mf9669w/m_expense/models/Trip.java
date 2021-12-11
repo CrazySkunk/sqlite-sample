@@ -8,7 +8,7 @@ import java.util.List;
 public class Trip implements Parcelable {
     private int id;
     private String nameOfPlace,destination,dateOfTrip,description,startTime,endTime;
-    private boolean riskAssessment;
+    private boolean riskAssessment=true;
 
     public Trip(int id, String nameOfPlace, String destination, String dateOfTrip, String description, boolean riskAssessment, String startTime, String endTime) {
         this.id = id;

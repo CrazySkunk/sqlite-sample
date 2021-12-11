@@ -139,10 +139,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripsViewHol
                             timePickerDialog.show();
                         });
                         expenseDialogBinding.button.setOnClickListener(vi -> {
-                            String typeOfExpense = Objects.requireNonNull(expenseDialogBinding.timeOfExpenseEt.getText()).toString().trim();
+                            String typeOfExpense = Objects.requireNonNull(expenseDialogBinding.typeOfExpenseEt.getText()).toString().trim();
                             String amountOfExpense = Objects.requireNonNull(expenseDialogBinding.amountOfExpenseEt.getText()).toString().trim();
                             String timeOfExpense = Objects.requireNonNull(expenseDialogBinding.timeOfExpenseEt.getText()).toString().trim();
-                            Expense expense = new Expense(0,String.valueOf(trip.getId()), typeOfExpense, amountOfExpense, timeOfExpense);
+                            Expense expense = new Expense(0,trip.getId(), typeOfExpense, amountOfExpense, timeOfExpense);
                             boolean status = dbHelper.addExpense(expense);
                             if (status)
                                 Snackbar.make(binding.getRoot(), "Record updated successfully", Snackbar.LENGTH_LONG).setAnimationMode(ANIMATION_MODE_FADE).show();
@@ -157,13 +157,6 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripsViewHol
                 popupMenu.show();
                 return false;
             });
-//            binding.getRoot().setOnClickListener(v -> {
-//                int position = getAdapterPosition();
-//                if (position!=RecyclerView.NO_POSITION){
-//                    click.onItemClick(position);
-//                }
-//            });
-
         }
 
         public void bind(Trip trip) {

@@ -1,10 +1,11 @@
 package uk.ac.gre.mf9669w.m_expense.models;
 
 public class Expense {
-    private String expenseOwner,typeOfExpense,amountOfExpense,timeOfExpense;
+    private int expenseOwner;
+    private String typeOfExpense,amountOfExpense,timeOfExpense;
     private Integer id;
 
-    public Expense(Integer id,String expenseOwner,String typeOfExpense, String amountOfExpense, String timeOfExpense) {
+    public Expense(Integer id,int expenseOwner,String typeOfExpense, String amountOfExpense, String timeOfExpense) {
         this.id = id;
         this.expenseOwner = expenseOwner;
         this.typeOfExpense = typeOfExpense;
@@ -16,11 +17,11 @@ public class Expense {
         return id;
     }
 
-    public String getExpenseOwner() {
+    public int getExpenseOwner() {
         return expenseOwner;
     }
 
-    public void setExpenseOwner(String expenseOwner) {
+    public void setExpenseOwner(int expenseOwner) {
         this.expenseOwner = expenseOwner;
     }
 

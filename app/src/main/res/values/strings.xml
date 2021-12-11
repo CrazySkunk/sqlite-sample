@@ -19,9 +19,21 @@
     <string name="name_ndestination_ndate">Name: \nDestination: \nDate:</string>
     <string name="update">Update</string>
     <string name="start_time">Start time</string>
+    <string name="search_by">Search by...</string>
     <array name="expense_type">
         <item>Travel</item>
         <item>Food</item>
         <item>Other</item>
+    </array>
+    <array name="trip_array">
+        <item>Name</item>
+        <item>Date</item>
+        <item>Description</item>
+        <item>Risk</item>
+    </array>
+    <array name="expense_array">
+        <item>Name</item>
+        <item>Amount</item>
+        <item>Time</item>
     </array>
 </resources>

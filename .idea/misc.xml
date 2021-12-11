@@ -10,7 +10,9 @@
         <entry key="app/src/main/res/layout/expense_dialog.xml" value="0.3614583333333333" />
         <entry key="app/src/main/res/layout/trip_item.xml" value="0.3614583333333333" />
         <entry key="app/src/main/res/menu-v26/trips_menu.xml" value="0.2015625" />
+        <entry key="app/src/main/res/menu/detail_menu.xml" value="0.3609375" />
         <entry key="app/src/main/res/menu/main_menu.xml" value="0.3614583333333333" />
+        <entry key="app/src/main/res/menu/trip_menu.xml" value="0.3609375" />
         <entry key="app/src/main/res/menu/trips_menu.xml" value="0.2015625" />
       </map>
     </option>

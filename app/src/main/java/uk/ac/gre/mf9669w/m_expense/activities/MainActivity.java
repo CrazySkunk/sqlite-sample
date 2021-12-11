@@ -1,42 +1,21 @@
 package uk.ac.gre.mf9669w.m_expense.activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
@@ -53,13 +32,10 @@ import uk.ac.gre.mf9669w.m_expense.retrofit.IPostTrip;
 import uk.ac.gre.mf9669w.m_expense.retrofit.RetrofitHelper;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int REQUEST_CHECK_SETTINGS = 100;
     private ActivityMainBinding binding;
     private String nameOfPlace, destination, dateOfTrip, description, startTime, endTime;
     private boolean riskAssessment;
-    private LocationRequest locationRequest;
     private DBHelper dbHelper;
-    private FusedLocationProviderClient client;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -69,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        client = LocationServices.getFusedLocationProviderClient(this);
         dbHelper = new DBHelper(this);
         Intent intent = getIntent();
         Trip trip = intent.getParcelableExtra("trip");
@@ -99,48 +74,6 @@ public class MainActivity extends AppCompatActivity {
                     timePickerDialog.show();
                 }
             });
-//            checkPermissions();
-            if (isGPSEnabled()) {
-                getCoordinates();
-            } else {
-                locationRequest = LocationRequest.create();
-                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                locationRequest.setInterval(5000);
-                locationRequest.setFastestInterval(2000);
-
-                LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                        .addLocationRequest(locationRequest);
-                builder.setAlwaysShow(true);
-
-                Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getApplicationContext())
-                        .checkLocationSettings(builder.build());
-
-                result.addOnCompleteListener(task -> {
-
-                    try {
-                        LocationSettingsResponse response = task.getResult(ApiException.class);
-                        Toast.makeText(MainActivity.this, "GPS is already turned on", Toast.LENGTH_SHORT).show();
-
-                    } catch (ApiException e) {
-
-                        switch (e.getStatusCode()) {
-                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-
-                                try {
-                                    ResolvableApiException resolvableApiException = (ResolvableApiException) e;
-                                    resolvableApiException.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
-                                } catch (IntentSender.SendIntentException ex) {
-                                    ex.printStackTrace();
-                                }
-                                break;
-
-                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                //Device does not have location
-                                break;
-                        }
-                    }
-                });
-            }
             binding.saveDetailsBtn.setOnClickListener(v -> saveDetails());
         } else {
             binding.nameEt.setText(trip.getNameOfPlace());
@@ -192,6 +125,12 @@ public class MainActivity extends AppCompatActivity {
                     boolean status = dbHelper.updateTrip(trip);
                     if (status)
                         Snackbar.make(binding.getRoot(), "Record updated successfully", Snackbar.LENGTH_LONG).setAnimationMode(Snackbar.ANIMATION_MODE_FADE).show();
+                    binding.nameEt.setText("");
+                    binding.destinationEt.setText("");
+                    binding.dateEt.setText("");
+                    binding.descriptionEt.setText("");
+                    binding.startAtEt.setText("");
+                    binding.endTimeEt.setText("");
                 }
             }
         }
@@ -213,11 +152,18 @@ public class MainActivity extends AppCompatActivity {
                 if (dateOfTrip.isEmpty()) {
                     binding.dateEtLayout.setError("Cannot be empty");
                 } else {
-                    binding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> riskAssessment = checkedId == binding.yes.getId());
+                    int checked = binding.radioGroup.getCheckedRadioButtonId();
+                    riskAssessment = checked == R.id.yes;
                     Trip trip = new Trip(0, nameOfPlace, destination, dateOfTrip, description, riskAssessment, startTime, endTime);
                     boolean status = dbHelper.insertTrip(trip);
                     if (status)
                         Snackbar.make(binding.getRoot(), "Record inserted successfully", Snackbar.LENGTH_LONG).setAnimationMode(Snackbar.ANIMATION_MODE_FADE).show();
+                    binding.nameEt.setText("");
+                    binding.destinationEt.setText("");
+                    binding.dateEt.setText("");
+                    binding.descriptionEt.setText("");
+                    binding.startAtEt.setText("");
+                    binding.endTimeEt.setText("");
                     Retrofit helper = new RetrofitHelper().getRetrofit("https://stuiis.cms.gre.ac.uk/COMP1424CoreWS/");
                     IPostTrip service = helper.create(IPostTrip.class);
                     service.postTrip(trip).enqueue(new Callback<Trip>() {
@@ -242,67 +188,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                        .setTitle("M-Expenses")
-                        .setMessage("This permission is necessary")
-                        .setPositiveButton("OK", (dialog, which) -> ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200));
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            } else {
-                getCoordinates();
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 200 && Arrays.equals(permissions, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}) && grantResults.length > 0) {
-            getCoordinates();
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    public void getLocation() {
-        client.getLastLocation().addOnSuccessListener(location -> {
-//            binding.latitudeEt.setText(String.valueOf(location.getLatitude()));
-//            binding.longitudeEt.setText(String.valueOf(location.getLongitude()));
-        });
-    }
-
-    @SuppressLint("MissingPermission")
-    public void getCoordinates() {
-        LocationServices.getFusedLocationProviderClient(this)
-                .requestLocationUpdates(locationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(@NonNull LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-                        LocationServices.getFusedLocationProviderClient(MainActivity.this)
-                                .removeLocationUpdates(this);
-                        if (locationResult.getLocations().size() > 0) {
-                            int index = locationResult.getLocations().size() - 1;
-//                            latitude = locationResult.getLocations().get(index).getLatitude();
-//                            longitude = locationResult.getLocations().get(index).getLongitude();
-//                            binding.latitudeEt.setText(String.valueOf(latitude));
-//                            binding.longitudeEt.setText(String.valueOf(longitude));
-                        }
-                    }
-                }, Looper.getMainLooper());
-    }
-
-    private boolean isGPSEnabled() {
-        LocationManager locationManager = null;
-        boolean isEnabled;
-        if (locationManager == null)
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        return isEnabled;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -325,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
             }));
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
-
         }
         return true;
     }

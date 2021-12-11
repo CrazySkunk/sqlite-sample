@@ -19,13 +19,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_box"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="222dp"
+        android:layout_width="150dp"
         android:layout_height="60dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/details">
@@ -34,16 +36,26 @@
             android:id="@+id/search_by_et"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Search by..." />
+            android:hint="Search term" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinner_expense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/search_box"
+        app:layout_constraintEnd_toStartOf="@+id/search_expense_btn"
+        app:layout_constraintStart_toEndOf="@+id/search_box"
+        app:layout_constraintTop_toTopOf="@+id/search_box"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/expense_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_goneMarginTop="50dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="10dp"
         android:clipToPadding="false"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
@@ -55,13 +67,13 @@
         tools:listitem="@layout/expense" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/search_expense_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:text="Search"
+        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/search_box"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/search_box"
         app:layout_constraintTop_toBottomOf="@+id/details" />
 </androidx.constraintlayout.widget.ConstraintLayout>
